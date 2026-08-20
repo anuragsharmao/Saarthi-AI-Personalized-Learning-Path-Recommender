@@ -1,4 +1,6 @@
-# Saarthi AI — Personalized Learning Path Recommender
+# [Saarthi AI - Your Guide to What's Next](https://saarthi-ai-personalized-learning-pa.vercel.app/)
+
+**🔗 Live demo:** https://saarthi-ai-personalized-learning-pa.vercel.app/
 
 A merged, bug-fixed, full-stack build combining three iterations into one:
 a goal-taxonomy/skill-graph recommender with adaptive-assessment path
