@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saarthi AI - Your Guide to What's Next</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .skill-bar { height: 8px; border-radius: 4px; background: #e5e7eb; overflow: hidden; }
+        .skill-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+        .fade-in { animation: fadeIn 0.6s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .typing { animation: typing 1.5s steps(40, end); }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .step-number { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+        .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; }
+        .chat-user { background: linear-gradient(135deg, #667eea, #764ba2); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+        .chat-ai { background: #f3f4f6; color: #1f2937; margin-right: auto; border-bottom-left-radius: 4px; }
+        .tab-active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .tab-inactive { background: #f3f4f6; color: #6b7280; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== APP CONTAINER ==================== -->
+    <div id="app" class="min-h-screen bg-gray-50">
+
+        <!-- ====== NAVBAR ====== -->
+        <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                            S
+                        </div>
+                        <div>
+                            <span class="text-xl font-bold text-gray-800">Saarthi</span>
+                            <span class="text-sm text-gray-500 ml-1">AI</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span id="aiModeBadge" class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-500 hidden"></span>
+                        <span id="userIdDisplay" class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full hidden"></span>
+                        <button onclick="resetApp()" class="text-sm text-gray-500 hover:text-gray-700 transition">
+                            <i class="fas fa-power-off mr-1"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+            <!-- ====== PHASE 1: LANDING ====== -->
+            <div id="phaseLanding" class="fade-in">
+                <div class="text-center py-12">
+                    <h1 class="text-5xl md:text-6xl font-extrabold text-gray-800 mb-4">
+                        Your Guide to
+                        <span class="gradient-bg text-transparent bg-clip-text">What's Next</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
+                        Stop searching. Start following a path.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4 mb-12">
+                        <span class="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600">🎯 Goal-based learning</span>
+                        <span class="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600">🧠 AI skill-gap analysis</span>
+                        <span class="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600">🗺️ Personalized roadmaps</span>
+                        <span class="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600">⚡ Adaptive recommendations</span>
+                        <span class="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600">🤖 AI learning coach</span>
+                    </div>
+                    <button onclick="showPhase('onboarding')" class="gradient-bg text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                        <i class="fas fa-rocket mr-2"></i> Build My Learning Path
+                    </button>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mt-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm card-hover border border-gray-100">
+                        <div class="text-3xl mb-3">🧠</div>
+                        <h3 class="font-bold text-lg">Skill Gap Graph</h3>
+                        <p class="text-gray-500 text-sm">We don't just recommend courses. We identify exactly what you're missing.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm card-hover border border-gray-100">
+                        <div class="text-3xl mb-3">🔄</div>
+                        <h3 class="font-bold text-lg">Adaptive Learning Path</h3>
+                        <p class="text-gray-500 text-sm">Your path changes based on what you actually learn and how well you perform.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm card-hover border border-gray-100">
+                        <div class="text-3xl mb-3">🔮</div>
+                        <h3 class="font-bold text-lg">What-If Simulator</h3>
+                        <p class="text-gray-500 text-sm">Change your goal or available time and watch your roadmap adapt instantly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== PHASE 2: ONBOARDING ====== -->
+            <div id="phaseOnboarding" class="fade-in hidden">
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white text-xl">🤖</div>
+                            <div>
+                                <h2 class="text-2xl font-bold">Let's Build Your Profile</h2>
+                                <p class="text-gray-500 text-sm">Tell me about your learning goals</p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Area -->
+                        <div id="chatArea" class="bg-gray-50 rounded-2xl p-4 min-h-[300px] max-h-[400px] overflow-y-auto mb-4">
+                            <div class="chat-bubble chat-ai">
+                                👋 Hi! I'm Saarthi, your AI learning guide.<br />
+                                Tell me what you're trying to achieve.
+                            </div>
+                        </div>
+
+                        <!-- Input -->
+                        <div class="flex gap-3">
+                            <input id="chatInput" type="text" placeholder="Type your response..." 
+                                   class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                   onkeydown="if(event.key==='Enter') sendMessage()" />
+                            <button onclick="sendMessage()" class="gradient-bg text-white px-6 py-3 rounded-xl hover:shadow-lg transition">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+
+                        <!-- Quick Suggestions -->
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            <button onclick="sendQuick('I want to become an AI Engineer in 6 months. I know Python and basic ML.')" 
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">🎯 AI Engineer</button>
+                            <button onclick="sendQuick('I want to become a Data Scientist in 4 months. I know Python and SQL.')" 
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">📊 Data Scientist</button>
+                            <button onclick="sendQuick('I want to become a Generative AI Engineer in 4 months. I know Python, ML, and Deep Learning basics.')" 
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">🤖 GenAI Engineer</button>
+                            <button onclick="sendQuick('I want to become a Full Stack Developer in 3 months. I know basic Python.')" 
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">💻 Full Stack</button>
+                        </div>
+
+                        <!-- Loading -->
+                        <div id="onboardingLoader" class="hidden text-center py-4">
+                            <div class="loader mx-auto"></div>
+                            <p class="text-sm text-gray-500 mt-2">Analyzing your profile...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== PHASE 3: DASHBOARD ====== -->
+            <div id="phaseDashboard" class="fade-in hidden">
+                <!-- User Welcome -->
+                <div class="bg-white rounded-3xl shadow-sm p-6 border border-gray-100 mb-6">
+                    <div class="flex flex-wrap justify-between items-center">
+                        <div>
+                            <h2 id="dashWelcome" class="text-2xl font-bold text-gray-800">Welcome back, Learner!</h2>
+                            <p id="dashGoal" class="text-gray-500">Goal: <span class="font-semibold text-gray-700">AI Engineer</span></p>
+                        </div>
+                        <div class="flex gap-3">
+                            <span id="dashStyle" class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium">
+                                <i class="fas fa-paint-brush mr-1"></i> Mixed Learner
+                            </span>
+                            <button onclick="showPhase('whatif')" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-medium transition">
+                                <i class="fas fa-wand-magic-sparkles mr-1"></i> What-If
+                            </button>
+                            <button onclick="showPhase('coach')" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-medium transition">
+                                <i class="fas fa-robot mr-1"></i> Coach
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm">Progress</p>
+                        <p id="dashProgress" class="text-2xl font-bold text-gray-800">0%</p>
+                        <div class="skill-bar mt-2"><div id="dashProgressBar" class="skill-bar-fill gradient-bg" style="width:0%"></div></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm">Milestones</p>
+                        <p id="dashMilestones" class="text-2xl font-bold text-gray-800">0 / 0</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm">Est. Completion</p>
+                        <p id="dashCompletion" class="text-2xl font-bold text-gray-800">--</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm">Learning Style</p>
+                        <p id="dashLearningStyle" class="text-2xl font-bold text-gray-800 capitalize">Mixed</p>
+                    </div>
+                </div>
+
+                <!-- Next Action (was referenced by JS but missing from markup — added) -->
+                <div id="dashNextAction" class="mb-6"></div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-6">
+                    <button onclick="switchTab('roadmap')" id="tabRoadmap" class="tab-active px-6 py-2 rounded-xl text-sm font-medium transition">🗺️ Roadmap</button>
+                    <button onclick="switchTab('skills')" id="tabSkills" class="tab-inactive px-6 py-2 rounded-xl text-sm font-medium transition">📊 Skill Map</button>
+                    <button onclick="switchTab('recommendations')" id="tabRecommendations" class="tab-inactive px-6 py-2 rounded-xl text-sm font-medium transition">💡 Recommendations</button>
+                    <button onclick="switchTab('job')" id="tabJob" class="tab-inactive px-6 py-2 rounded-xl text-sm font-medium transition">💼 Job Analysis</button>
+                </div>
+
+                <!-- Tab Content: Roadmap -->
+                <div id="tabContentRoadmap" class="bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
+                    <div id="roadmapContent">
+                        <div class="text-center py-12 text-gray-400">
+                            <i class="fas fa-route text-4xl mb-3"></i>
+                            <p>No learning path generated yet.</p>
+                            <button onclick="generatePath()" class="mt-4 gradient-bg text-white px-6 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                                Generate Path
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Skills -->
+                <div id="tabContentSkills" class="hidden bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
+                    <div id="skillsContent">
+                        <div class="text-center py-12 text-gray-400">
+                            <i class="fas fa-chart-bar text-4xl mb-3"></i>
+                            <p>Analyze your skills to see the gap.</p>
+                            <button onclick="analyzeSkills()" class="mt-4 gradient-bg text-white px-6 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                                Analyze Skills
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Recommendations -->
+                <div id="tabContentRecommendations" class="hidden bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
+                    <div id="recommendationsContent">
+                        <div class="text-center py-12 text-gray-400">
+                            <i class="fas fa-lightbulb text-4xl mb-3"></i>
+                            <p>Get personalized recommendations.</p>
+                            <button onclick="getRecommendations()" class="mt-4 gradient-bg text-white px-6 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                                Get Recommendations
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Job Analysis -->
+                <div id="tabContentJob" class="hidden bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
+                    <h4 class="font-bold text-lg mb-3"><i class="fas fa-briefcase mr-2 text-purple-500"></i> Job Description Analyzer</h4>
+                    <p class="text-gray-500 text-sm mb-4">Paste a job description to reverse-engineer the skills you need.</p>
+                    <textarea id="jobDescriptionInput" rows="4" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
+                              placeholder="Paste job description here...">Looking for an AI Engineer with strong Python skills, experience with PyTorch, Docker, and cloud deployment. Must know machine learning and deep learning fundamentals.</textarea>
+                    <button onclick="analyzeJob()" class="mt-3 gradient-bg text-white px-6 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                        <i class="fas fa-search mr-1"></i> Analyze Job
+                    </button>
+                    <div id="jobResults" class="mt-4"></div>
+                </div>
+            </div>
+
+            <!-- ====== PHASE 4: WHAT-IF SIMULATOR ====== -->
+            <div id="phaseWhatif" class="fade-in hidden">
+                <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 max-w-3xl mx-auto">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white text-xl">🔮</div>
+                        <div>
+                            <h2 class="text-2xl font-bold">What-If Simulator</h2>
+                            <p class="text-gray-500 text-sm">See how changes affect your learning path</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Change Goal</label>
+                            <select id="whatIfGoal" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
+                                <option value="AI Engineer">AI Engineer</option>
+                                <option value="Generative AI Engineer">Generative AI Engineer</option>
+                                <option value="Data Scientist">Data Scientist</option>
+                                <option value="Data Analyst">Data Analyst</option>
+                                <option value="Backend Developer">Backend Developer</option>
+                                <option value="Full Stack Developer">Full Stack Developer</option>
+                                <option value="MLOps Engineer">MLOps Engineer</option>
+                            </select>
+                            <button onclick="simulateGoalChange()" class="mt-2 gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition w-full">
+                                Simulate Goal Change
+                            </button>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Change Weekly Hours</label>
+                            <input id="whatIfHours" type="number" value="10" min="1" max="40" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                            <button onclick="simulateTimeChange()" class="mt-2 gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition w-full">
+                                Simulate Time Change
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="whatIfResults" class="bg-gray-50 rounded-2xl p-4 min-h-[100px]">
+                        <p class="text-gray-400 text-sm text-center">Results will appear here</p>
+                    </div>
+
+                    <button onclick="showPhase('dashboard')" class="mt-4 text-gray-500 hover:text-gray-700 text-sm transition">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <!-- ====== PHASE 5: AI COACH ====== -->
+            <div id="phaseCoach" class="fade-in hidden">
+                <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 max-w-3xl mx-auto">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white text-xl">🤖</div>
+                        <div>
+                            <h2 class="text-2xl font-bold">AI Learning Coach</h2>
+                            <p class="text-gray-500 text-sm">Ask me anything about your learning journey</p>
+                        </div>
+                    </div>
+
+                    <!-- Coach Chat -->
+                    <div id="coachChatArea" class="bg-gray-50 rounded-2xl p-4 min-h-[200px] max-h-[300px] overflow-y-auto mb-4">
+                        <div class="chat-bubble chat-ai">
+                            👋 I'm your AI coach. Ask me why you're learning something, what to skip, or anything about your path!
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <input id="coachInput" type="text" placeholder="Ask your coach..." 
+                               class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
+                               onkeydown="if(event.key==='Enter') askCoach()" />
+                        <button onclick="askCoach()" class="gradient-bg text-white px-6 py-3 rounded-xl hover:shadow-lg transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <button onclick="askQuick('Why am I learning Docker?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">Why Docker?</button>
+                        <button onclick="askQuick('Can I skip PyTorch?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">Skip PyTorch?</button>
+                        <button onclick="askQuick('How am I progressing?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full transition">My Progress</button>
+                    </div>
+
+                    <button onclick="showPhase('dashboard')" class="mt-4 text-gray-500 hover:text-gray-700 text-sm transition">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <!-- ====== PHASE 6: ASSESSMENT ====== -->
+            <div id="phaseAssessment" class="fade-in hidden">
+                <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 max-w-3xl mx-auto">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white text-xl">📝</div>
+                        <div>
+                            <h2 id="assessmentTitle" class="text-2xl font-bold">Assessment</h2>
+                            <p id="assessmentSubtitle" class="text-gray-500 text-sm">Test your knowledge</p>
+                        </div>
+                    </div>
+
+                    <div id="assessmentContent" class="bg-gray-50 rounded-2xl p-6">
+                        <p class="text-center text-gray-400">Select a milestone from your roadmap to take an assessment.</p>
+                    </div>
+
+                    <button onclick="showPhase('dashboard')" class="mt-4 text-gray-500 hover:text-gray-700 text-sm transition">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <!-- ====== LOADING OVERLAY ====== -->
+            <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-3xl p-8 text-center max-w-sm">
+                    <div class="loader mx-auto mb-4"></div>
+                    <p id="loadingText" class="text-gray-700 font-medium">Loading...</p>
+                    <p class="text-gray-400 text-sm">Please wait</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // GLOBALS
+        // ============================================================
+        // Relative path: works no matter what host/port serves this file,
+        // since FastAPI serves both the API and this page from one origin.
+        const API_BASE = '';
+        let USER_ID = null;
+        let currentPhase = 'landing';
+        let currentTab = 'roadmap';
+        let milestones = [];
+        let conversationHistory = [];
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        function showLoading(text = 'Loading...') {
+            document.getElementById('loadingText').textContent = text;
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function showPhase(phase) {
+            // Hide all phases
+            ['Landing', 'Onboarding', 'Dashboard', 'Whatif', 'Coach', 'Assessment'].forEach(p => {
+                document.getElementById('phase' + p).classList.add('hidden');
+            });
+            // Show target
+            document.getElementById('phase' + phase.charAt(0).toUpperCase() + phase.slice(1)).classList.remove('hidden');
+            currentPhase = phase;
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            // Update tab buttons
+            ['Roadmap', 'Skills', 'Recommendations', 'Job'].forEach(t => {
+                const btn = document.getElementById('tab' + t);
+                const content = document.getElementById('tabContent' + t);
+                if (t === tab.charAt(0).toUpperCase() + tab.slice(1)) {
+                    btn.className = 'tab-active px-6 py-2 rounded-xl text-sm font-medium transition';
+                    content.classList.remove('hidden');
+                } else {
+                    btn.className = 'tab-inactive px-6 py-2 rounded-xl text-sm font-medium transition';
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        function getUserId() {
+            if (!USER_ID) {
+                alert('Please complete onboarding first.');
+                showPhase('onboarding');
+                return null;
+            }
+            return USER_ID;
+        }
+
+        // ============================================================
+        // AI MODE BADGE (shows whether GROQ_API_KEY is live or we're
+        // running on heuristic fallbacks — useful for demoing/grading)
+        // ============================================================
+        async function checkAiMode() {
+            try {
+                const res = await fetch(`${API_BASE}/api/health`).then(r => r.json());
+                const badge = document.getElementById('aiModeBadge');
+                badge.classList.remove('hidden');
+                if (res.using_live_ai) {
+                    badge.textContent = '🟢 Live AI (Groq)';
+                    badge.className = 'text-xs px-3 py-1 rounded-full bg-green-100 text-green-700';
+                } else {
+                    badge.textContent = '⚪ Offline / heuristic mode';
+                    badge.className = 'text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-500';
+                }
+            } catch (e) { /* backend not reachable yet; ignore */ }
+        }
+
+        // ============================================================
+        // SESSION PERSISTENCE (survive a page refresh)
+        // ============================================================
+        async function restoreSession() {
+            const saved = localStorage.getItem('saarthi_user_id');
+            if (!saved) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/dashboard/${saved}`);
+                if (!res.ok) { localStorage.removeItem('saarthi_user_id'); return; }
+                USER_ID = saved;
+                document.getElementById('userIdDisplay').textContent = '🆔 ' + USER_ID;
+                document.getElementById('userIdDisplay').classList.remove('hidden');
+                showPhase('dashboard');
+                loadDashboard();
+            } catch (e) { /* backend not reachable yet; ignore */ }
+        }
+
+        // ============================================================
+        // ONBOARDING
+        // ============================================================
+        function addChatMessage(text, isUser = false) {
+            const area = document.getElementById('chatArea');
+            const div = document.createElement('div');
+            div.className = `chat-bubble ${isUser ? 'chat-user' : 'chat-ai'} fade-in`;
+            div.innerHTML = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function sendQuick(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+
+            addChatMessage(text, true);
+            conversationHistory.push({ role: 'user', content: text });
+
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-bubble chat-ai';
+            typingDiv.innerHTML = '<span class="pulse-dot">●</span> <span class="pulse-dot">●</span> <span class="pulse-dot">●</span>';
+            document.getElementById('chatArea').appendChild(typingDiv);
+            document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
+
+            try {
+                // Onboarding API call
+                const response = await fetch(`${API_BASE}/api/onboarding`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        text: text,
+                        name: 'Learner'
+                    })
+                });
+                const data = await response.json();
+                
+                // Remove typing indicator
+                typingDiv.remove();
+
+                if (data.user_id) {
+                    USER_ID = data.user_id;
+                    localStorage.setItem('saarthi_user_id', USER_ID);
+                    document.getElementById('userIdDisplay').textContent = '🆔 ' + USER_ID;
+                    document.getElementById('userIdDisplay').classList.remove('hidden');
+                    checkAiMode();
+
+                    // Show profile summary
+                    const profile = data.profile;
+                    addChatMessage(`
+                        ✅ Profile created!<br />
+                        🎯 Goal: <strong>${profile.goal}</strong><br />
+                        📚 Experience: <strong>${profile.experience_level}</strong><br />
+                        ⏰ ${profile.weekly_hours} hours/week<br />
+                        📅 ${profile.deadline_months} months target
+                    `, false);
+
+                    addChatMessage(`
+                        🚀 Ready to start your learning journey?<br />
+                        I'll now analyze your skills and build a personalized path.
+                    `, false);
+
+                    // Auto-generate path after a moment
+                    setTimeout(async () => {
+                        addChatMessage('📊 Analyzing your skill gaps...', false);
+                        await analyzeSkillsSilent();
+                        addChatMessage('🗺️ Generating your learning path...', false);
+                        await generatePathSilent();
+                        addChatMessage(`
+                            ✅ All set! Your learning path is ready.<br />
+                            Click <strong>"Go to Dashboard"</strong> to view it.
+                        `, false);
+                        showPhase('dashboard');
+                        loadDashboard();
+                    }, 1500);
+
+                } else {
+                    addChatMessage('❌ Something went wrong. Please try again.', false);
+                }
+            } catch (error) {
+                typingDiv.remove();
+                addChatMessage('❌ Error connecting to server. Make sure the backend is running.', false);
+                console.error(error);
+            }
+        }
+
+        // ============================================================
+        // SILENT API CALLS (for onboarding flow)
+        // ============================================================
+        async function analyzeSkillsSilent() {
+            if (!USER_ID) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/skill-gap/${USER_ID}`, {
+                    method: 'POST'
+                });
+                return await response.json();
+            } catch (e) { console.error(e); }
+        }
+
+        async function generatePathSilent() {
+            if (!USER_ID) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/learning-path/${USER_ID}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                milestones = data.milestones || [];
+                return data;
+            } catch (e) { console.error(e); }
+        }
+
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+        async function loadDashboard() {
+            const userId = getUserId();
+            if (!userId) return;
+
+            showLoading('Loading dashboard...');
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard/${userId}`);
+                const data = await response.json();
+
+                // Dashboard payload carries the full milestone list — keep the
+                // local cache in sync so the roadmap renders correctly even
+                // after a fresh page load (not just right after onboarding).
+                if (data.milestones) milestones = data.milestones;
+
+                document.getElementById('dashWelcome').textContent = `Welcome back, ${data.user_id || 'Learner'}!`;
+                document.getElementById('dashGoal').innerHTML = `Goal: <span class="font-semibold text-gray-700">${data.goal || 'Not set'}</span>`;
+                document.getElementById('dashProgress').textContent = `${Math.round(data.progress_percentage || 0)}%`;
+                document.getElementById('dashProgressBar').style.width = `${data.progress_percentage || 0}%`;
+                document.getElementById('dashMilestones').textContent = `${data.completed_milestones || 0} / ${data.total_milestones || 0}`;
+                document.getElementById('dashCompletion').textContent = data.estimated_completion ? new Date(data.estimated_completion).toLocaleDateString() : '--';
+                document.getElementById('dashLearningStyle').textContent = data.learning_style || 'Mixed';
+                document.getElementById('dashStyle').textContent = `🎨 ${data.learning_style || 'Mixed'} Learner`;
+
+                // Show next action (or a completion message if the path is done)
+                if (data.next_action) {
+                    document.getElementById('dashNextAction').innerHTML = `
+                        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                            <p class="text-sm text-purple-700">🚀 Your next step</p>
+                            <p class="font-semibold text-gray-800">${data.next_action.title}</p>
+                            <button onclick="startAssessment('${data.next_action.id}')" class="mt-2 gradient-bg text-white px-4 py-1 rounded-lg text-sm">
+                                Take Assessment
+                            </button>
+                        </div>
+                    `;
+                } else if (data.total_milestones > 0) {
+                    document.getElementById('dashNextAction').innerHTML = `
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center text-green-700 text-sm">
+                            🎉 All milestones complete for this goal!
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('dashNextAction').innerHTML = '';
+                }
+
+                // Show skill map if available
+                if (data.skill_map && Object.keys(data.skill_map).length > 0) {
+                    renderSkillMap(data.skill_map);
+                }
+
+                // Show roadmap if available
+                if (data.total_milestones > 0) {
+                    renderRoadmap();
+                }
+
+                hideLoading();
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error loading dashboard. Make sure the backend is running.');
+            }
+        }
+
+        function renderSkillMap(skills) {
+            const container = document.getElementById('skillsContent');
+            let html = '<h4 class="font-bold text-lg mb-4">📊 Your Skill Map</h4>';
+            for (const [name, value] of Object.entries(skills)) {
+                const pct = Math.round(value * 100);
+                const color = pct > 70 ? 'bg-green-500' : pct > 40 ? 'bg-yellow-500' : 'bg-red-500';
+                html += `
+                    <div class="mb-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium">${name}</span>
+                            <span class="text-gray-500">${pct}%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill ${color}" style="width:${pct}%"></div></div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderRoadmap() {
+            const container = document.getElementById('roadmapContent');
+            let html = '<h4 class="font-bold text-lg mb-4">🗺️ Your Learning Path</h4>';
+            html += '<div class="space-y-4">';
+            milestones.forEach((m, index) => {
+                const phase = m.phase || index + 1;
+                const completed = m.completed ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-white';
+                const statusIcon = m.completed ? '✅' : '⏳';
+                html += `
+                    <div class="border ${completed} rounded-2xl p-4 card-hover">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number">${phase}</div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <h5 class="font-semibold text-gray-800">${m.title}</h5>
+                                    <span class="text-sm">${statusIcon}</span>
+                                </div>
+                                <p class="text-sm text-gray-500">${m.skills ? m.skills.join(', ') : 'No skills listed'}</p>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    ${m.resources ? m.resources.slice(0, 2).map(r => 
+                                        `<span class="text-xs bg-gray-100 px-2 py-1 rounded-full">📚 ${r.title || 'Resource'}</span>`
+                                    ).join('') : ''}
+                                    ${m.project ? `<span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">🛠️ ${m.project.title || 'Project'}</span>` : ''}
+                                </div>
+                                ${!m.completed ? `<button onclick="startAssessment('${m.id}')" class="mt-3 gradient-bg text-white px-4 py-1 rounded-lg text-sm hover:shadow-lg transition">
+                                    📝 Take Assessment
+                                </button>` : `<span class="mt-3 inline-block text-green-600 text-sm">✅ Completed</span>`}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // RECOMMENDATIONS
+        // ============================================================
+        async function getRecommendations() {
+            const userId = getUserId();
+            if (!userId) return;
+
+            showLoading('Getting recommendations...');
+            try {
+                const response = await fetch(`${API_BASE}/api/recommendations/${userId}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                hideLoading();
+
+                const container = document.getElementById('recommendationsContent');
+                if (!data.recommendations || data.recommendations.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No gaps found! You\'re on track! 🎉</p>';
+                    return;
+                }
+
+                let html = '<h4 class="font-bold text-lg mb-4">💡 Personalized Recommendations</h4>';
+                data.recommendations.forEach(rec => {
+                    html += `
+                        <div class="border border-gray-200 rounded-2xl p-4 mb-3 card-hover bg-white">
+                            <div class="flex items-center justify-between">
+                                <h5 class="font-semibold text-gray-800">${rec.skill}</h5>
+                                <span class="text-xs ${rec.priority === 'high' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'} px-2 py-1 rounded-full">
+                                    ${rec.priority}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">${rec.why || 'Recommended for your goal'}</p>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                ${rec.resources ? rec.resources.map(r => 
+                                    `<span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">${r.type || '📚'} ${r.title}</span>`
+                                ).join('') : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                switchTab('recommendations');
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error getting recommendations.');
+            }
+        }
+
+        // ============================================================
+        // SKILL ANALYSIS
+        // ============================================================
+        async function analyzeSkills() {
+            const userId = getUserId();
+            if (!userId) return;
+
+            showLoading('Analyzing skills...');
+            try {
+                const response = await fetch(`${API_BASE}/api/skill-gap/${userId}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                hideLoading();
+
+                const container = document.getElementById('skillsContent');
+                let html = '<h4 class="font-bold text-lg mb-4">📊 Skill Gap Analysis</h4>';
+                html += `<p class="text-sm text-gray-500 mb-4">Goal: ${data.goal} | ${data.gap_count} gaps found</p>`;
+                html += '<div class="space-y-3">';
+                data.skill_gaps.forEach(gap => {
+                    const pct = Math.round(gap.current * 100);
+                    const gapPct = Math.round(gap.gap * 100);
+                    html += `
+                        <div class="border border-gray-200 rounded-xl p-3">
+                            <div class="flex justify-between">
+                                <span class="font-medium">${gap.skill}</span>
+                                <span class="text-sm ${gap.priority === 'high' ? 'text-red-500' : 'text-yellow-500'}">${gapPct}% gap</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-bar-fill bg-purple-500" style="width:${pct}%"></div></div>
+                            <p class="text-xs text-gray-400 mt-1">Current: ${pct}% | Target: ${Math.round(gap.required * 100)}%</p>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+                switchTab('skills');
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error analyzing skills.');
+            }
+        }
+
+        // ============================================================
+        // ASSESSMENT
+        // ============================================================
+        function startAssessment(milestoneId) {
+            showPhase('assessment');
+            document.getElementById('assessmentTitle').textContent = '📝 Milestone Assessment';
+            document.getElementById('assessmentSubtitle').textContent = 'Test your knowledge to advance your path';
+
+            const container = document.getElementById('assessmentContent');
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-gray-600 mb-4">Complete this assessment to demonstrate your understanding.</p>
+                    <div class="bg-white rounded-xl p-6 border border-gray-200 max-w-md mx-auto">
+                        <p class="font-semibold">Sample Question:</p>
+                        <p class="text-gray-600 text-sm mt-2">What is the core concept of this skill?</p>
+                        <div class="mt-4 space-y-2 text-left">
+                            <label class="block border border-gray-200 rounded-lg p-2 hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q1" value="a" class="mr-2" /> Option A
+                            </label>
+                            <label class="block border border-gray-200 rounded-lg p-2 hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q1" value="b" class="mr-2" /> Option B
+                            </label>
+                            <label class="block border border-gray-200 rounded-lg p-2 hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q1" value="c" class="mr-2" /> Option C
+                            </label>
+                        </div>
+                        <button onclick="submitAssessment('${milestoneId}')" class="mt-4 gradient-bg text-white px-6 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                            Submit Assessment
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4">This is a demo assessment. In production, we use real questions.</p>
+                </div>
+            `;
+        }
+
+        async function submitAssessment(milestoneId) {
+            const userId = getUserId();
+            if (!userId) return;
+
+            // Simulate a score (70-95% for demo) — the backend's assessment
+            // questions are template-generated for this prototype, so scoring
+            // is simulated here rather than graded against real answer keys.
+            const score = 0.7 + Math.random() * 0.25;
+            const passed = score >= 0.7;
+
+            showLoading('Evaluating your assessment...');
+            try {
+                const response = await fetch(`${API_BASE}/api/assessment/${userId}/${milestoneId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ score: score })
+                });
+                const data = await response.json();
+                hideLoading();
+
+                const container = document.getElementById('assessmentContent');
+                const icon = passed ? '🎉' : '📚';
+                const message = passed ? 'Great job! You\'ve passed this milestone!' : 'Good effort! Review the concepts and try again.';
+
+                container.innerHTML = `
+                    <div class="text-center py-8 fade-in">
+                        <div class="text-6xl mb-4">${icon}</div>
+                        <h3 class="text-2xl font-bold ${passed ? 'text-green-600' : 'text-yellow-600'}">${Math.round(score * 100)}%</h3>
+                        <p class="text-gray-600 mt-2">${message}</p>
+                        <p class="text-sm text-gray-400 mt-1">${data.message || ''}</p>
+                        <button onclick="showPhase('dashboard'); loadDashboard();" class="mt-4 gradient-bg text-white px-6 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                        </button>
+                    </div>
+                `;
+
+                // Refresh dashboard after assessment
+                setTimeout(() => loadDashboard(), 2000);
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error submitting assessment.');
+            }
+        }
+
+        // ============================================================
+        // WHAT-IF SIMULATOR
+        // ============================================================
+        async function simulateGoalChange() {
+            const userId = getUserId();
+            if (!userId) return;
+
+            const goal = document.getElementById('whatIfGoal').value;
+            showLoading('Simulating goal change...');
+            try {
+                const response = await fetch(`${API_BASE}/api/what-if/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ change_type: 'goal', new_value: goal })
+                });
+                const data = await response.json();
+                hideLoading();
+
+                const container = document.getElementById('whatIfResults');
+                const sim = data.simulation || {};
+                container.innerHTML = `
+                    <div class="fade-in">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                            <i class="fas fa-arrows-rotate text-purple-500"></i>
+                            <span>Goal: ${sim.current_goal || 'Current'} → ${sim.new_goal || goal}</span>
+                        </div>
+                        ${sim.added_skills && sim.added_skills.length > 0 ? `
+                            <div class="bg-green-50 border border-green-200 rounded-xl p-3 mb-2">
+                                <p class="text-sm font-medium text-green-700">➕ Added Skills</p>
+                                <p class="text-sm text-gray-600">${sim.added_skills.join(', ')}</p>
+                            </div>
+                        ` : ''}
+                        ${sim.removed_skills && sim.removed_skills.length > 0 ? `
+                            <div class="bg-red-50 border border-red-200 rounded-xl p-3 mb-2">
+                                <p class="text-sm font-medium text-red-700">➖ Removed Skills</p>
+                                <p class="text-sm text-gray-600">${sim.removed_skills.join(', ')}</p>
+                            </div>
+                        ` : ''}
+                        <div class="bg-purple-50 border border-purple-200 rounded-xl p-3">
+                            <p class="text-sm font-medium text-purple-700">📅 New Timeline</p>
+                            <p class="text-sm text-gray-600">${sim.message || 'Path updated successfully!'}</p>
+                            ${sim.new_timeline ? `<p class="text-xs text-gray-400">Est. completion: ${new Date(sim.new_timeline).toLocaleDateString()}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error simulating goal change.');
+            }
+        }
+
+        async function simulateTimeChange() {
+            const userId = getUserId();
+            if (!userId) return;
+
+            const hours = parseInt(document.getElementById('whatIfHours').value) || 10;
+            showLoading('Simulating time change...');
+            try {
+                const response = await fetch(`${API_BASE}/api/what-if/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ change_type: 'weekly_hours', new_value: hours })
+                });
+                const data = await response.json();
+                hideLoading();
+
+                const container = document.getElementById('whatIfResults');
+                const sim = data.simulation || {};
+                container.innerHTML = `
+                    <div class="fade-in">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                            <i class="fas fa-clock text-purple-500"></i>
+                            <span>Weekly Hours: ${sim.current_weekly_hours ?? 10} → ${sim.new_weekly_hours ?? hours}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-gray-100 rounded-xl p-3 text-center">
+                                <p class="text-xs text-gray-500">Current Timeline</p>
+                                <p class="text-sm font-semibold">${sim.current_completion ? new Date(sim.current_completion).toLocaleDateString() : '--'}</p>
+                            </div>
+                            <div class="bg-purple-100 rounded-xl p-3 text-center">
+                                <p class="text-xs text-purple-500">New Timeline</p>
+                                <p class="text-sm font-semibold text-purple-700">${sim.new_completion ? new Date(sim.new_completion).toLocaleDateString() : '--'}</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-3">
+                            <p class="text-sm text-gray-600">${sim.message || 'Timeline updated!'}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error simulating time change.');
+            }
+        }
+
+        // ============================================================
+        // AI COACH
+        // ============================================================
+        function addCoachMessage(text, isUser = false) {
+            const area = document.getElementById('coachChatArea');
+            const div = document.createElement('div');
+            div.className = `chat-bubble ${isUser ? 'chat-user' : 'chat-ai'} fade-in`;
+            div.innerHTML = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        async function askCoach() {
+            const input = document.getElementById('coachInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+
+            addCoachMessage(text, true);
+
+            // Loading indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-bubble chat-ai';
+            typingDiv.innerHTML = '<span class="pulse-dot">●</span> <span class="pulse-dot">●</span> <span class="pulse-dot">●</span>';
+            document.getElementById('coachChatArea').appendChild(typingDiv);
+            document.getElementById('coachChatArea').scrollTop = document.getElementById('coachChatArea').scrollHeight;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/coach/${USER_ID}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await response.json();
+                typingDiv.remove();
+                addCoachMessage(data.response || 'I\'m here to help!', false);
+            } catch (error) {
+                typingDiv.remove();
+                addCoachMessage('❌ Error connecting to coach. Please try again.', false);
+                console.error(error);
+            }
+        }
+
+        function askQuick(text) {
+            document.getElementById('coachInput').value = text;
+            askCoach();
+        }
+
+        // ============================================================
+        // JOB ANALYSIS
+        // ============================================================
+        async function analyzeJob() {
+            const text = document.getElementById('jobDescriptionInput').value.trim();
+            if (!text) {
+                alert('Please paste a job description.');
+                return;
+            }
+
+            showLoading('Analyzing job description...');
+            try {
+                const response = await fetch(`${API_BASE}/api/job-analysis`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await response.json();
+                hideLoading();
+
+                const container = document.getElementById('jobResults');
+                let html = `
+                    <div class="fade-in border border-purple-200 rounded-2xl p-4 bg-purple-50">
+                        <h5 class="font-bold text-purple-700">📋 Job Analysis Results</h5>
+                        <div class="mt-2">
+                            <p class="text-sm font-medium text-gray-700">Skills Found:</p>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                ${data.skills_found.map(s => `<span class="bg-purple-200 text-purple-800 px-2 py-1 rounded-full text-xs">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                        ${data.gap_analysis ? `
+                            <div class="mt-3">
+                                <p class="text-sm font-medium text-gray-700">Recommended Learning Order:</p>
+                                <p class="text-sm text-gray-600">${data.gap_analysis.recommended_skills ? data.gap_analysis.recommended_skills.join(' → ') : 'N/A'}</p>
+                            </div>
+                        ` : ''}
+                        <div class="mt-3 bg-white rounded-xl p-3">
+                            <p class="text-sm text-gray-600">${data.custom_goal || 'Customized learning path created!'}</p>
+                        </div>
+                        <button onclick="applyJobPath('${data.skills_found ? data.skills_found.join(',') : ''}')" class="mt-3 gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:shadow-lg transition">
+                            <i class="fas fa-check mr-1"></i> Apply This Path
+                        </button>
+                    </div>
+                `;
+                container.innerHTML = html;
+                switchTab('job');
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error analyzing job description.');
+            }
+        }
+
+        function applyJobPath(skills) {
+            // Note: job-analysis skills don't map onto one of the fixed
+            // goal templates, so this doesn't mutate the stored goal —
+            // it's a lightweight acknowledgement, matching the prototype
+            // scope of the job-analysis feature itself.
+            alert('✅ Noted! Use these skills as a checklist alongside your existing roadmap, or start a new goal in onboarding that matches them most closely.');
+        }
+
+        // ============================================================
+        // GENERATE PATH (Manual)
+        // ============================================================
+        async function generatePath() {
+            const userId = getUserId();
+            if (!userId) return;
+
+            showLoading('Generating learning path...');
+            try {
+                const response = await fetch(`${API_BASE}/api/learning-path/${userId}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                milestones = data.milestones || [];
+                hideLoading();
+                renderRoadmap();
+                loadDashboard();
+            } catch (error) {
+                hideLoading();
+                console.error(error);
+                alert('Error generating path.');
+            }
+        }
+
+        // ============================================================
+        // RESET
+        // ============================================================
+        function resetApp() {
+            if (!confirm('Reset the app? This will clear your session.')) return;
+            USER_ID = null;
+            milestones = [];
+            conversationHistory = [];
+            localStorage.removeItem('saarthi_user_id');
+            document.getElementById('userIdDisplay').classList.add('hidden');
+            document.getElementById('aiModeBadge').classList.add('hidden');
+            showPhase('landing');
+            // Reset chat
+            document.getElementById('chatArea').innerHTML = `
+                <div class="chat-bubble chat-ai">
+                    👋 Hi! I'm Saarthi, your AI learning guide.<br />
+                    Tell me what you're trying to achieve.
+                </div>
+            `;
+            document.getElementById('coachChatArea').innerHTML = `
+                <div class="chat-bubble chat-ai">
+                    👋 I'm your AI coach. Ask me why you're learning something, what to skip, or anything about your path!
+                </div>
+            `;
+            // Reset results
+            document.getElementById('whatIfResults').innerHTML = '<p class="text-gray-400 text-sm text-center">Results will appear here</p>';
+            document.getElementById('jobResults').innerHTML = '';
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            showPhase('landing');
+            checkAiMode();
+            restoreSession();
+            console.log('🚀 Saarthi AI Frontend Ready');
+        });
+    </script>
+
+</body>
+</html>
