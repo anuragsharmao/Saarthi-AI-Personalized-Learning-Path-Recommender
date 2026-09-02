@@ -1,172 +1,476 @@
-# [Saarthi AI - Your Guide to What's Next](https://saarthi-ai-personalized-learning-pa.vercel.app/)
+# Saarthi AI — Your Guide to What's Next
 
-**🔗 Live demo:** https://saarthi-ai-personalized-learning-pa.vercel.app/
+**Saarthi (सारथी)** means *guide* or *charioteer*. The idea behind Saarthi AI is simple: instead of giving learners a fixed list of courses, it builds a learning path based on their **career goal, existing skills, learning style, available time, and progress**.
 
-A merged, bug-fixed, full-stack build combining three iterations into one:
-a goal-taxonomy/skill-graph recommender with adaptive-assessment path
-mutation, an LLM-first conversational layer with persistence-aware dashboard
-insights, and a polished Tailwind frontend wired directly to the backend.
-"Saarthi" (सारथी) means charioteer/guide — the AI acting as your guide
-through a learning journey.
+🔗 **Live Demo:** https://saarthi-ai-personalized-learning-pa.vercel.app/
 
-## Latest update: frontend swap + Groq instead of Anthropic
+---
 
-- Replaced the backend's LLM provider from Anthropic Claude to **Groq**
-  (OpenAI-compatible endpoint, free tier). Default model is
-  `openai/gpt-oss-20b` — Groq deprecated `llama-3.3-70b-versatile` and
-  `llama-3.1-8b-instant` in June 2026, so those older model names are
-  intentionally not used. Override via `GROQ_MODEL` in `.env`.
-- Replaced the frontend entirely with the provided Tailwind/vanilla-JS
-  design (landing → onboarding chat → dashboard → what-if / coach /
-  assessment phases), with the "Hackathon Demo" badge removed.
-- Fixed three real bugs found while wiring the new frontend to the backend:
-  1. `document.getElementById('dashNextAction')` was referenced in JS but
-     the element didn't exist in the HTML — `loadDashboard()` would throw
-     and silently stop updating the page. Added the missing `<div
-     id="dashNextAction">`.
-  2. `/api/skill-gap/{id}` returned a `gaps` key; the frontend reads
-     `data.skill_gaps`. Fixed the endpoint to return the key name the
-     frontend actually expects (verified with a live request, not just
-     read).
-  3. `/api/job-analysis` returned `recommended_learning_order` /
-     `custom_goal_label`; the frontend reads `data.gap_analysis
-     .recommended_skills` and `data.custom_goal`. Fixed the endpoint to
-     return both the old and new key names.
-  4. The what-if weekly-hours simulator hardcoded a `10 hrs/week` baseline
-     regardless of the learner's actual committed hours. Fixed to read
-     `user.weekly_hours` — verified with two learners on different hour
-     commitments to confirm it's reading the real value, not coincidentally
-     matching the old constant.
-- Added session persistence (`localStorage`) so refreshing the page doesn't
-  lose the learner's session, and a small "Live AI (Groq) / offline mode"
-  badge in the navbar so it's obvious which mode a demo is running in.
-- `API_BASE` changed from a hardcoded `http://localhost:8000` to a relative
-  path, since the frontend is served by the same FastAPI app.
+## What is Saarthi AI?
 
-All of the above was verified against a running server in this environment,
-including a real (rejected) call to Groq's actual endpoint with an invalid
-key to confirm the fallback path triggers on genuine failures, not just on
-"no key present."
+Saarthi AI is a full-stack personalized learning-path platform.
 
+A learner can describe their goal in normal language, for example:
 
-## Why this version, and what changed
+> "I want to become a Generative AI Engineer. I know Python and basic machine learning, but I haven't worked with LLMs yet."
 
-You had two working prototypes. Here's what each contributed and what was
-fixed when merging them into this single backend:
+Saarthi extracts the learner's profile, identifies the missing skills, and creates a learning path around those gaps.
 
-**From your FastAPI version (kept):**
-- Multi-goal taxonomy (`GOAL_SKILL_MAPPING`) — 7 career goals, each with
-  required vs. recommended skills, instead of one flat catalog.
-- Market-demand scores per skill, factored into both ranking and explanations.
-- Learning-style adaptation (visual / reading / hands-on / mixed) that
-  re-weights resource recommendations.
-- Accelerate / reinforce / relearn: assessment scores actually *mutate* the
-  path in place (insert a practice milestone, insert prerequisite review
-  milestones, or advance), not just a pass/fail gate.
-- Job-description reverse engineering: paste a JD, get back the skills it
-  implies and a prerequisite-ordered learning sequence.
-- What-if simulation for goal switches and weekly-hours changes.
+The path isn't completely static either. As the learner completes assessments, the system can **accelerate, reinforce, or relearn** parts of the path depending on their performance.
 
-**Bugs fixed:**
-- `analyze_job()` called `self._generate_job_path(...)` from a plain
-  function (no `self` in scope) — this would 500 on every request. Fixed by
-  calling the helper directly and moving it into `JobDescriptionService`.
-- `.dict()` calls on Pydantic models were silently using the deprecated v1
-  API under the v2 you had installed — switched to `.model_dump()`.
-- The original goal-keyword matcher checked `"AI Engineer"` before
-  `"Generative AI Engineer"`, so it always matched the shorter substring
-  first and mis-classified generative-AI goals. Fixed by checking
-  longer/more specific goal names first.
+It also supports job-description analysis, so a learner can paste a real JD and see what skills it requires and what order they should learn them in.
 
-**From my earlier version, merged in:**
-- Real Groq API calls (Llama/OSS models via Groq's free tier) for profile extraction,
-  coaching, and job-description parsing — your version simulated these with
-  keyword matching. Every one of these calls has a rule-based fallback, so
-  the app still runs end-to-end with zero setup if no API key is present.
-- A graph-based "what if I skip this skill?" simulator — walks the
-  prerequisite graph to report exactly which downstream skills would become
-  blocked, rather than a generic warning.
-- Cohort percentile benchmarking against a simulated 150-learner demo cohort
-  per goal (clearly labeled as simulated in the UI).
-- Pacing-risk detection — compares committed weekly hours against actual
-  completion rate and flags if you're falling behind your own plan.
-- Spaced-repetition review nudges — flags completed milestones untouched for
-  21+ days.
-- A single `/api/chat` endpoint that transparently routes between onboarding
-  (first message) and coaching (every message after), so the frontend only
-  needs one call for the whole conversation — the granular endpoints
-  (`/api/skill-gap`, `/api/recommendations`, etc.) are still there
-  individually if you want to call them directly.
+---
 
-## File count (kept deliberately small)
+## Main Features
 
+### 🎯 Personalized Skill Gap Analysis
+
+Saarthi maps different career goals to their required and recommended skills.
+
+It compares those skills with the learner's existing knowledge and identifies what they need to learn next.
+
+The system also considers **market-demand scores** when ranking skills, so the path isn't based only on a fixed skill list.
+
+---
+
+### 🧠 Adaptive Learning Paths
+
+The learning path changes based on assessment performance.
+
+There are three possible outcomes:
+
+* **Accelerate** — the learner already understands the topic, so the path moves forward.
+* **Reinforce** — the learner needs additional practice before moving ahead.
+* **Relearn** — prerequisite concepts are added back into the path.
+
+This makes the learning path adaptive instead of just being a predefined course sequence.
+
+---
+
+### 📚 Learning-Style Based Recommendations
+
+Learners can select how they prefer to learn:
+
+* Visual
+* Reading
+* Hands-on
+* Mixed
+
+The recommendation system uses this preference when ranking learning resources and projects.
+
+---
+
+### 💬 AI Learning Coach
+
+Saarthi includes a conversational AI layer powered by **Groq**.
+
+The coach can answer questions about the learner's current path, suggest what to focus on next, and provide guidance based on their progress.
+
+The same `/api/chat` endpoint handles both onboarding and subsequent coaching conversations.
+
+If the Groq API isn't configured or a request fails, Saarthi falls back to a rule-based response so the application can still be used.
+
+---
+
+### 💼 Job Description Analysis
+
+A learner can paste a job description and Saarthi will try to identify:
+
+1. Skills mentioned or implied by the JD
+2. Skills the learner needs
+3. A prerequisite-aware learning order
+
+This turns a job description into a practical learning roadmap.
+
+---
+
+### 🔄 What-If Simulator
+
+The learner can experiment with different scenarios without changing their actual learning plan.
+
+For example:
+
+* What if I switch my career goal?
+* What if I can study 15 hours instead of 10 hours per week?
+* What happens if I skip a particular skill?
+
+For skipped skills, Saarthi follows the prerequisite graph and shows which later skills could become blocked.
+
+---
+
+### 📊 Learning Dashboard
+
+The dashboard provides a quick overview of:
+
+* Overall learning progress
+* Current skill gaps
+* Skill map
+* Next recommended action
+* Pacing risk
+* Cohort percentile
+* Reviews that are due
+
+The cohort percentile is based on a **simulated demo cohort**, not real user data.
+
+---
+
+### 🔁 Spaced Review
+
+Completed milestones can be marked as reviewed.
+
+If a completed milestone hasn't been reviewed for 21+ days, Saarthi can surface it as a review reminder.
+
+---
+
+## Tech Stack
+
+### Backend
+
+* Python
+* FastAPI
+* Pydantic
+* Groq API
+
+### Frontend
+
+* HTML
+* Tailwind CSS
+* Vanilla JavaScript
+
+### AI / Recommendation
+
+* Groq LLM
+* Goal → skill taxonomy
+* Skill prerequisite graph
+* TF-IDF / ranking-based recommendations
+* Rule-based fallbacks
+
+### Deployment
+
+* Frontend/backend served through the FastAPI application
+* Live demo deployed on Vercel
+
+---
+
+## How the System Works
+
+The basic flow looks like this:
+
+```text
+Learner
+   │
+   ▼
+Natural Language Goal
+   │
+   ▼
+Profile Extraction
+   │
+   ├── Career Goal
+   ├── Existing Skills
+   ├── Learning Style
+   └── Weekly Study Hours
+   │
+   ▼
+Skill Gap Analysis
+   │
+   ▼
+Prerequisite Skill Graph
+   │
+   ▼
+Personalized Learning Path
+   │
+   ├── Resources
+   ├── Projects
+   └── Assessments
+   │
+   ▼
+Assessment Result
+   │
+   ├── Accelerate
+   ├── Reinforce
+   └── Relearn
+   │
+   ▼
+Updated Learning Path
 ```
+
+---
+
+## Groq Integration
+
+The current version uses **Groq** instead of Anthropic.
+
+The default model is:
+
+```text
+openai/gpt-oss-20b
+```
+
+The model can be changed through:
+
+```env
+GROQ_MODEL=your-model-name
+```
+
+The application does not completely depend on the LLM.
+
+If `GROQ_API_KEY` isn't available, Saarthi switches to deterministic fallbacks for things such as profile extraction and coaching responses.
+
+This also makes it easier to run the project locally without setting up an API key first.
+
+---
+
+## Project Structure
+
+I intentionally kept the project small so that the core logic is easy to understand.
+
+```text
 saarthi-ai/
-├── main.py              # entire backend: models, services, API routes
+│
+├── main.py
 ├── requirements.txt
 ├── .env.example
 ├── README.md
+│
 └── static/
-    └── index.html       # entire frontend: HTML + CSS + JS, one file
+    └── index.html
 ```
 
-Four files total. `main.py` is organized top-to-bottom as: Groq
-integration → data models → in-memory "database" → skill graph → services
-(profile extraction, skill-gap, recommendations, path generation,
-adaptation, what-if, coaching, job-description, insights) → API routes.
+### `main.py`
 
-## Running it
+Contains the backend, including:
+
+* Data models
+* In-memory database
+* Goal and skill taxonomy
+* Skill graph
+* Profile extraction
+* Skill-gap analysis
+* Recommendations
+* Learning-path generation
+* Assessment adaptation
+* What-if simulation
+* AI coaching
+* Job-description analysis
+* Dashboard insights
+* API routes
+
+### `static/index.html`
+
+Contains the complete frontend:
+
+* Landing page
+* Onboarding chat
+* Dashboard
+* Learning path
+* Coach
+* Assessment
+* What-if simulator
+
+---
+
+## Running Locally
+
+Clone the repository and install the dependencies:
 
 ```bash
 cd saarthi-ai
 pip install -r requirements.txt
-cp .env.example .env        # optional — see below
+```
+
+Create the environment file:
+
+```bash
+cp .env.example .env
+```
+
+Add your Groq API key if you want to use live AI responses:
+
+```env
+GROQ_API_KEY=your_api_key
+```
+
+Then start the server:
+
+```bash
 uvicorn main:app --reload
 ```
 
-Open `http://localhost:8000`.
+Open:
 
-### With or without an API key
+```text
+http://localhost:8000
+```
 
-Copy `.env.example` to `.env` and set `GROQ_API_KEY` (free at console.groq.com) to enable live
-Groq calls for profile extraction, coaching replies, and job-description
-parsing. **Without a key, the app still runs completely** — every AI
-touchpoint has a deterministic fallback (keyword/regex extraction, template
-coaching replies), and the UI shows an "offline/heuristic mode" banner so
-it's always clear which mode you're in.
+### Running without a Groq API key
 
-## API surface
+You can also run Saarthi without an API key.
 
-| Endpoint | Purpose |
-|---|---|
-| `POST /api/chat` | Conversational entry point — onboards on first message, coaches afterward |
-| `POST /api/onboarding` | Extract a profile from free text and create a learner |
-| `GET /api/learners/{id}` | Fetch a learner's profile + chat history |
-| `POST /api/skill-gap/{id}` | Compute required-vs-current skill gaps |
-| `POST /api/recommendations/{id}` | Ranked resource/project recommendations per gap |
-| `POST /api/learning-path/{id}` | Generate/regenerate the full milestone path |
-| `POST /api/assessment/{id}/{milestone_id}` | Submit a score → accelerate / reinforce / relearn |
-| `POST /api/what-if/{id}` | Simulate a goal change, hours change, or skill skip |
-| `POST /api/coach/{id}` | Ask the AI coach a direct question |
-| `POST /api/job-analysis` | Reverse-engineer skills + order from a job description |
-| `POST /api/learning-style/{id}` | Update visual/reading/hands-on/mixed preference |
-| `GET /api/dashboard/{id}` | Progress, skill map, pacing risk, cohort percentile, reviews due |
-| `POST /api/review/{id}/{milestone_id}` | Mark a completed milestone as reviewed |
-| `POST /api/demo/create-user` | One-call demo learner for quick testing |
-| `GET /api/health` | Reports whether live Groq calls are enabled |
+The application uses rule-based fallbacks for the AI-dependent parts, so the main learning-path workflow still works.
 
-## Data & persistence
+The UI indicates whether the application is currently running in **Live AI** or **offline/heuristic** mode.
 
-In-memory (`Database` class in `main.py`), same as your original — resets on
-restart. This was a deliberate choice to keep the file count down; every
-service function takes/returns plain data, so swapping in Postgres/SQLite
-only touches the `Database` class, nothing else.
+---
 
-## Known simplifications (be upfront about these if asked)
+## API Endpoints
 
-- Assessment questions are template-generated, not content-validated —
-  fine for demonstrating the accelerate/reinforce/relearn mechanic, not a
-  real question bank.
-- The cohort used for percentile benchmarking is synthetic/simulated data
-  generated at startup, clearly labeled as such in the UI — not real users.
-- In-memory storage means all learners reset when the server restarts.
+| Endpoint                                   | Purpose                                |
+| ------------------------------------------ | -------------------------------------- |
+| `POST /api/chat`                           | Onboarding and AI coaching             |
+| `POST /api/onboarding`                     | Create a learner from free-form input  |
+| `GET /api/learners/{id}`                   | Get learner profile and chat history   |
+| `POST /api/skill-gap/{id}`                 | Calculate skill gaps                   |
+| `POST /api/recommendations/{id}`           | Get recommendations for missing skills |
+| `POST /api/learning-path/{id}`             | Generate/regenerate learning path      |
+| `POST /api/assessment/{id}/{milestone_id}` | Submit an assessment                   |
+| `POST /api/what-if/{id}`                   | Run what-if simulations                |
+| `POST /api/coach/{id}`                     | Ask the AI coach                       |
+| `POST /api/job-analysis`                   | Analyze a job description              |
+| `POST /api/learning-style/{id}`            | Update learning preference             |
+| `GET /api/dashboard/{id}`                  | Get dashboard insights                 |
+| `POST /api/review/{id}/{milestone_id}`     | Mark a milestone as reviewed           |
+| `POST /api/demo/create-user`               | Create a demo learner                  |
+| `GET /api/health`                          | Check AI/backend status                |
+
+---
+
+## Important Implementation Details
+
+During the merge of the different versions of Saarthi, a few issues had to be fixed.
+
+### Frontend/backend response mismatch
+
+The frontend expected:
+
+```text
+skill_gaps
+```
+
+while the backend was returning:
+
+```text
+gaps
+```
+
+The API response was updated so both sides use the same structure.
+
+### Job analysis response mismatch
+
+The frontend expected:
+
+```text
+gap_analysis.recommended_skills
+gap_analysis.custom_goal
+```
+
+while the backend was returning different field names.
+
+The response was updated to support the frontend while keeping the existing fields for compatibility.
+
+### Missing dashboard element
+
+The JavaScript referenced:
+
+```text
+dashNextAction
+```
+
+but the element wasn't present in the HTML.
+
+Adding the missing element fixed the dashboard update issue.
+
+### Pydantic v2
+
+The older `.dict()` calls were replaced with `.model_dump()` to match Pydantic v2.
+
+### Goal matching
+
+The goal matcher originally checked broader goals before more specific ones.
+
+For example, `"AI Engineer"` could match before `"Generative AI Engineer"`.
+
+The matching order was changed to check more specific goal names first.
+
+### What-if weekly hours
+
+The simulator originally used a fixed 10 hours/week value.
+
+It now uses the learner's actual weekly commitment instead.
+
+---
+
+## Data & Persistence
+
+At the moment, Saarthi uses an **in-memory database**.
+
+This was intentional for keeping the prototype simple.
+
+The advantage is that the project can run with almost no database setup.
+
+The downside is that learner data is lost when the backend restarts.
+
+The database layer is kept separate from the services, so replacing it with **SQLite, PostgreSQL, or another database** later shouldn't require rewriting the recommendation and learning-path logic.
+
+---
+
+## Current Limitations
+
+Saarthi is still a prototype, so there are a few things I would improve before using it as a production learning platform.
+
+### Assessment Question Quality
+
+Assessment questions are currently generated from templates.
+
+They demonstrate the adaptive learning mechanism, but they aren't a professionally validated question bank.
+
+### Synthetic Cohort
+
+The cohort percentile feature uses simulated learner data generated for the demo.
+
+It should not be interpreted as a comparison against real Saarthi users.
+
+### In-Memory Storage
+
+Learner information is currently stored in memory and is lost when the server restarts.
+
+A persistent database would be the next obvious improvement.
+
+### Learning Resources
+
+The recommendation system currently focuses on matching skills and learner preferences. A future version could integrate live course/resource data and continuously update recommendations based on market demand.
+
+---
+
+## What's Next?
+
+Some improvements I'd like to work on:
+
+* PostgreSQL-based persistence
+* Real learner analytics
+* Better assessment/question generation
+* More detailed skill graphs
+* Real-time market-demand data
+* More learning resources and project recommendations
+* Authentication and user accounts
+* Better progress analytics
+* More robust LLM evaluation
+* Resource completion tracking
+
+---
+
+## Why I Built Saarthi
+
+Most learning platforms give you a collection of courses and leave you to figure out **what to learn next**.
+
+Saarthi is built around the opposite idea:
+
+> **Start with where you want to go, understand where you are now, and figure out the path between the two.**
+
+The goal is not to replace existing learning platforms. It's to make the journey between **career goal → skill gaps → learning path → progress → next step** more personalized.
+
+---
+
+## License
+
+This project is for learning, experimentation, and demonstration purposes.
